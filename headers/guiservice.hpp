@@ -1,8 +1,6 @@
 /**
  * guiservice.hpp
  * Defines the data types and Service for GUI output.
- *
- * @author Boyu Yang
  */
 
 #ifndef GUI_SERVICE_HPP

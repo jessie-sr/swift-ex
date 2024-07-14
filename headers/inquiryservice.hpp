@@ -1,8 +1,6 @@
 /**
  * inquiryservice.hpp
  * Defines the data types and Service for customer inquiries.
- *
- * @author Boyu Yang
  */
 #ifndef INQUIRY_SERVICE_HPP
 #define INQUIRY_SERVICE_HPP

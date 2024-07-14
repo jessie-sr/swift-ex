@@ -1,8 +1,6 @@
 /**
  * historicaldataservice.hpp
  * historicaldataservice.hpp
- *
- * @author Boyu Yang
  * Defines the data types and Service for historical data.
  */
 #ifndef HISTORICAL_DATA_SERVICE_HPP

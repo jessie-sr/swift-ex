@@ -2,8 +2,6 @@
  * tradebookingservice.hpp
  * Defines the data types and Service for trade booking.
  * Trade booking service has a special listener to subscribe data from execution service.
- *
- * @author Boyu Yang
  */
 #ifndef TRADE_BOOKING_SERVICE_HPP
 #define TRADE_BOOKING_SERVICE_HPP

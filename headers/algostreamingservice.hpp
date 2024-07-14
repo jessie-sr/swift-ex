@@ -1,8 +1,6 @@
 /**
  * algostreamingservice.hpp
  * Defines the data types and Service for algo streams.
- *
- * @author Boyu Yang
  */
 
 #ifndef ALGOSTREAMING_SERVICE_HPP

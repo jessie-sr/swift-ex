@@ -9,8 +9,6 @@
  * 	   (another data flow: execution service -> trade booking service -> position service -> risk service -> historical data service)
  * 	3. trade data -> trade booking service -> position service -> risk service -> historical data service
  * 	4. inquiry data -> inquiry service -> historical data service
- * 	
- * @author Boyu Yang
  */
 
 #include <iostream>

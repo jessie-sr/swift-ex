@@ -1,8 +1,6 @@
 /**
  * soa.hpp
  * Definition of our Service Oriented Architecture (SOA) Service base class
- *
- * @author Boyu Yang
  */
 
 #ifndef SOA_HPP

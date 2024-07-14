@@ -3,7 +3,6 @@
  * Defines the data types and Service for executions.
  * Execution service does not need an input connector, since it flows in data from a listener from algo execution service.
  * But it needs an inner connector (publish only) to publish executions.
- * @author Boyu Yang
  */
 #ifndef EXECUTION_SERVICE_HPP
 #define EXECUTION_SERVICE_HPP

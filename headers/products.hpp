@@ -1,8 +1,6 @@
 /**
  * products.hpp 
  * models Bond, Interest Rate Swap, Future products, etc.
- *
- * @author Boyu Yang
  */
 
 #ifndef PRODUCTS_HPP

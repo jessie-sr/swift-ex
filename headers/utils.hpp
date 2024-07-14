@@ -1,8 +1,6 @@
 /**
  * utils.hpp
  * A collection of utility functions
- *
- * @author Boyu Yang
  */
 
 #ifndef UTILS_HPP

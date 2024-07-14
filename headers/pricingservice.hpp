@@ -1,8 +1,6 @@
 /**
  * pricingservice.hpp
  * Defines the data types and Service for internal prices.
- *
- * @author Boyu Yang
  */
 #ifndef PRICINGservice_HPP
 #define PRICINGservice_HPP

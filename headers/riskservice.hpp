@@ -1,8 +1,6 @@
 /**
  * riskservice.hpp
  * Defines the data types and Service for fixed income risk.
- *
- * @author Boyu Yang
  */
 #ifndef RISK_SERVICE_HPP
 #define RISK_SERVICE_HPP
