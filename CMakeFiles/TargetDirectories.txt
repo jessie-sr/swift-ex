@@ -1,0 +1,7 @@
+/Users/jessiesun/Projects/swift-ex/CMakeFiles/server.dir
+/Users/jessiesun/Projects/swift-ex/CMakeFiles/price.dir
+/Users/jessiesun/Projects/swift-ex/CMakeFiles/market.dir
+/Users/jessiesun/Projects/swift-ex/CMakeFiles/trade.dir
+/Users/jessiesun/Projects/swift-ex/CMakeFiles/inquiry.dir
+/Users/jessiesun/Projects/swift-ex/CMakeFiles/edit_cache.dir
+/Users/jessiesun/Projects/swift-ex/CMakeFiles/rebuild_cache.dir
