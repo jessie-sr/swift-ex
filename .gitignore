@@ -41,3 +41,6 @@ Makefile
 *.exe
 *.out
 *.app
+
+# Design Documents
+/designDoc

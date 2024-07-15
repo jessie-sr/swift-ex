@@ -56,10 +56,27 @@ FileConnector<T>::FileConnector(const string& _dataFile, const string& _host, co
 template<typename T>
 void FileConnector<T>::Publish(const string& dataLine)
 {
-  // write the data string to socket
-  // asynchronous operation ensures server gets all data
-  boost::asio::async_write(socket, boost::asio::buffer(dataLine + "\n"), [](boost::system::error_code /*ec*/, std::size_t /*length*/) {});
+  // create a buffer from the data line, appending a newline character
+  auto buffer = boost::asio::buffer(dataLine + "\n");
+
+  // asynchronously write the data buffer to the socket
+  boost::asio::async_write(socket, buffer,
+    [this](boost::system::error_code ec, std::size_t length) 
+    {
+      if (ec)
+      {
+        // log the error if the write operation fails
+        log(LogLevel::ERROR, "Failed to write to socket: " + ec.message());
+      }
+      else
+      {
+        // log the number of bytes successfully written (optional)
+        log(LogLevel::INFO, "Successfully wrote " + to_string(length) + " bytes to the socket.");
+      }
+    }
+  );
 }
+
 
 template<typename T>
 void FileConnector<T>::Subscribe()
