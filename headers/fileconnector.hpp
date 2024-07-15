@@ -77,7 +77,6 @@ void FileConnector<T>::Publish(const string& dataLine)
   );
 }
 
-
 template<typename T>
 void FileConnector<T>::Subscribe()
 {
