@@ -222,6 +222,8 @@ private:
   string ToString(SwapLegType swapLegType) const;
 };
 
+// definitions and implementations for the constructors and member functions of the Product, Bond, and IRSwap classes
+
 Product::Product(string _productId, ProductType _productType)
 {
   productId = _productId;
