@@ -1,5 +1,5 @@
 /**
- * products.hpp 
+ * products.hpp
  * models Bond, Interest Rate Swap, Future products, etc.
  */
 
@@ -15,7 +15,12 @@ using namespace std;
 using namespace boost::gregorian;
 
 // Product Types
-enum ProductType { IRSWAP, BOND, FUTURE };
+enum ProductType
+{
+  IRSWAP,
+  BOND,
+  FUTURE
+};
 
 /**
  * Definition of a base Product class
@@ -34,12 +39,16 @@ public:
   ProductType GetProductType() const;
 
 private:
-  string productId; // product id variable
+  string productId;        // product id variable
   ProductType productType; // product type variable
 };
 
 // Types of bond identifiers: ISIN (used primarily in Europe) and CUSIP (for US)
-enum BondIdType { CUSIP, ISIN };
+enum BondIdType
+{
+  CUSIP,
+  ISIN
+};
 
 /**
  * Modeling of a Bond Product
@@ -64,36 +73,73 @@ public:
   BondIdType GetBondIdType() const;
 
   // Overload the << operator to print out the bond
-  friend ostream& operator<<(ostream &output, const Bond &bond);
+  friend ostream &operator<<(ostream &output, const Bond &bond);
 
 private:
-  string productId; // product identifier variable
+  string productId;      // product identifier variable
   BondIdType bondIdType; // bond id type variable
-  string ticker; // ticker variable
-  float coupon; // coupon variable
-  date maturityDate; // maturity date variable
+  string ticker;         // ticker variable
+  float coupon;          // coupon variable
+  date maturityDate;     // maturity date variable
 };
 
 // Day Count convention values
-enum DayCountConvention { THIRTY_THREE_SIXTY, ACT_THREE_SIXTY, ACT_THREE_SIXTY_FIVE};
+enum DayCountConvention
+{
+  THIRTY_THREE_SIXTY,
+  ACT_THREE_SIXTY,
+  ACT_THREE_SIXTY_FIVE
+};
 
 // Payment Frequency values
-enum PaymentFrequency { QUARTERLY, SEMI_ANNUAL, ANNUAL };
+enum PaymentFrequency
+{
+  QUARTERLY,
+  SEMI_ANNUAL,
+  ANNUAL
+};
 
 // Index on the floating leg of an IR Swap
-enum FloatingIndex { LIBOR, EURIBOR };
+enum FloatingIndex
+{
+  LIBOR,
+  EURIBOR
+};
 
 // Tenor on the floating leg of an IR Swap
-enum FloatingIndexTenor { TENOR_1M, TENOR_3M, TENOR_6M, TENOR_12M };
+enum FloatingIndexTenor
+{
+  TENOR_1M,
+  TENOR_3M,
+  TENOR_6M,
+  TENOR_12M
+};
 
 // Currency for the IR Swap
-enum Currency { USD, EUR, GBP };
+enum Currency
+{
+  USD,
+  EUR,
+  GBP
+};
 
 // IR Swap type
-enum SwapType { SPOT, FORWARD, IMM, MAC, BASIS };
+enum SwapType
+{
+  SPOT,
+  FORWARD,
+  IMM,
+  MAC,
+  BASIS
+};
 
 // IR Swap leg type (i.e. outright is one leg, curve is two legs, fly is three legs
-enum SwapLegType { OUTRIGHT, CURVE, FLY };
+enum SwapLegType
+{
+  OUTRIGHT,
+  CURVE,
+  FLY
+};
 
 /**
  * Modeling of an Interest Rate Swap Product
@@ -139,20 +185,20 @@ public:
   SwapLegType GetSwapLegType() const;
 
   // Overload the << operator to print the IR Swap
-  friend ostream& operator<<(ostream &output, const IRSwap &swap);
+  friend ostream &operator<<(ostream &output, const IRSwap &swap);
 
 private:
-  DayCountConvention fixedLegDayCountConvention; // fixed leg daycount convention variable
+  DayCountConvention fixedLegDayCountConvention;    // fixed leg daycount convention variable
   DayCountConvention floatingLegDayCountConvention; // floating leg daycount convention variable
-  PaymentFrequency fixedLegPaymentFrequency; // fixed leg payment freq
-  FloatingIndex floatingIndex; // floating leg index
-  FloatingIndexTenor floatingIndexTenor; // floating leg tenor
-  date effectiveDate; // effective date
-  date terminationDate; // termination date
-  Currency currency; // currency
-  int termYears; // term in years
-  SwapType swapType; // swap type
-  SwapLegType swapLegType; // swap leg type
+  PaymentFrequency fixedLegPaymentFrequency;        // fixed leg payment freq
+  FloatingIndex floatingIndex;                      // floating leg index
+  FloatingIndexTenor floatingIndexTenor;            // floating leg tenor
+  date effectiveDate;                               // effective date
+  date terminationDate;                             // termination date
+  Currency currency;                                // currency
+  int termYears;                                    // term in years
+  SwapType swapType;                                // swap type
+  SwapLegType swapLegType;                          // swap leg type
 
   // return a string represenation for the day count convention
   string ToString(DayCountConvention dayCountConvention) const;
@@ -224,24 +270,24 @@ BondIdType Bond::GetBondIdType() const
   return bondIdType;
 }
 
-ostream& operator<<(ostream &output, const Bond &bond)
+ostream &operator<<(ostream &output, const Bond &bond)
 {
   output << bond.ticker << " " << bond.coupon << " " << bond.GetMaturityDate();
   return output;
 }
 
-IRSwap::IRSwap(string _productId, DayCountConvention _fixedLegDayCountConvention, DayCountConvention _floatingLegDayCountConvention, PaymentFrequency _fixedLegPaymentFrequency, FloatingIndex _floatingIndex, FloatingIndexTenor _floatingIndexTenor, date _effectiveDate, date _terminationDate, Currency _currency, int _termYears, SwapType _swapType, SwapLegType _swapLegType)  : Product(_productId, IRSWAP)
+IRSwap::IRSwap(string _productId, DayCountConvention _fixedLegDayCountConvention, DayCountConvention _floatingLegDayCountConvention, PaymentFrequency _fixedLegPaymentFrequency, FloatingIndex _floatingIndex, FloatingIndexTenor _floatingIndexTenor, date _effectiveDate, date _terminationDate, Currency _currency, int _termYears, SwapType _swapType, SwapLegType _swapLegType) : Product(_productId, IRSWAP)
 {
-  fixedLegDayCountConvention =_fixedLegDayCountConvention;
-  floatingLegDayCountConvention =_floatingLegDayCountConvention;
-  fixedLegPaymentFrequency =_fixedLegPaymentFrequency;
-  floatingIndex =_floatingIndex;
-  floatingIndexTenor =_floatingIndexTenor;
-  effectiveDate =_effectiveDate;
-  terminationDate =_terminationDate;
-  currency =_currency;
+  fixedLegDayCountConvention = _fixedLegDayCountConvention;
+  floatingLegDayCountConvention = _floatingLegDayCountConvention;
+  fixedLegPaymentFrequency = _fixedLegPaymentFrequency;
+  floatingIndex = _floatingIndex;
+  floatingIndexTenor = _floatingIndexTenor;
+  effectiveDate = _effectiveDate;
+  terminationDate = _terminationDate;
+  currency = _currency;
   termYears = _termYears;
-  swapType =_swapType;
+  swapType = _swapType;
   swapLegType = _swapLegType;
 }
 
@@ -304,8 +350,7 @@ SwapLegType IRSwap::GetSwapLegType() const
   return swapLegType;
 }
 
-
-ostream& operator<<(ostream &output, const IRSwap &swap)
+ostream &operator<<(ostream &output, const IRSwap &swap)
 {
   output << "fixedDayCount:" << swap.ToString(swap.GetFixedLegDayCountConvention()) << " floatingDayCount:" << swap.ToString(swap.GetFloatingLegDayCountConvention()) << " paymentFreq:" << swap.ToString(swap.GetFixedLegPaymentFrequency()) << " " << swap.ToString(swap.GetFloatingIndexTenor()) << swap.ToString(swap.GetFloatingIndex()) << " effective:" << swap.GetEffectiveDate() << " termination:" << swap.GetTerminationDate() << " " << swap.ToString(swap.GetCurrency()) << " " << swap.GetTermYears() << "yrs " << swap.ToString(swap.GetSwapType()) << " " << swap.ToString(swap.GetSwapLegType());
   return output;
@@ -313,88 +358,167 @@ ostream& operator<<(ostream &output, const IRSwap &swap)
 
 string IRSwap::ToString(DayCountConvention dayCountConvention) const
 {
-  switch (dayCountConvention) {
-  case THIRTY_THREE_SIXTY: return "30/360";
-  case ACT_THREE_SIXTY: return "Act/360";
-  default: return "";
+  switch (dayCountConvention)
+  {
+  case THIRTY_THREE_SIXTY:
+    return "30/360";
+  case ACT_THREE_SIXTY:
+    return "Act/360";
+  default:
+    return "";
   }
 }
 
 string IRSwap::ToString(PaymentFrequency paymentFrequency) const
 {
-  switch (paymentFrequency) {
-  case QUARTERLY: return "Quarterly";
-  case SEMI_ANNUAL: return "Semi-Annual";
-  case ANNUAL: return "Annual";
-  default: return "";
+  switch (paymentFrequency)
+  {
+  case QUARTERLY:
+    return "Quarterly";
+  case SEMI_ANNUAL:
+    return "Semi-Annual";
+  case ANNUAL:
+    return "Annual";
+  default:
+    return "";
   }
 }
 
 string IRSwap::ToString(FloatingIndex floatingIndex) const
 {
-  switch (floatingIndex) {
-  case LIBOR: return "LIBOR";
-  case EURIBOR: return "EURIBOR";
-  default: return "";
+  switch (floatingIndex)
+  {
+  case LIBOR:
+    return "LIBOR";
+  case EURIBOR:
+    return "EURIBOR";
+  default:
+    return "";
   }
 }
 
 string IRSwap::ToString(FloatingIndexTenor floatingIndexTenor) const
-{ 
-  switch(floatingIndexTenor) {
-  case TENOR_1M: return "1m";
-  case TENOR_3M: return "3m";
-  case TENOR_6M: return "6m";
-  case TENOR_12M: return "12m";
-  default: return "";
+{
+  switch (floatingIndexTenor)
+  {
+  case TENOR_1M:
+    return "1m";
+  case TENOR_3M:
+    return "3m";
+  case TENOR_6M:
+    return "6m";
+  case TENOR_12M:
+    return "12m";
+  default:
+    return "";
   }
 }
 
 string IRSwap::ToString(Currency currency) const
-{ 
-  switch(currency) {
-  case USD: return "USD";
-  case EUR: return "EUR";
-  case GBP: return "GBP";
-  default: return "";
+{
+  switch (currency)
+  {
+  case USD:
+    return "USD";
+  case EUR:
+    return "EUR";
+  case GBP:
+    return "GBP";
+  default:
+    return "";
   }
 }
 
 string IRSwap::ToString(SwapType swapType) const
-{ 
-  switch(swapType) {
-  case SPOT: return "Standard";
-  case FORWARD: return "Forward";
-  case IMM: return "IMM";
-  case MAC: return "MAC";
-  case BASIS: return "Basis";
-  default: return "";
+{
+  switch (swapType)
+  {
+  case SPOT:
+    return "Standard";
+  case FORWARD:
+    return "Forward";
+  case IMM:
+    return "IMM";
+  case MAC:
+    return "MAC";
+  case BASIS:
+    return "Basis";
+  default:
+    return "";
   }
 }
 
 string IRSwap::ToString(SwapLegType swapLegType) const
-{ 
-  switch(swapLegType) {
-  case OUTRIGHT: return "Outright";
-  case CURVE: return "Curve";
-  case FLY: return "Fly";
-  default: return "";
+{
+  switch (swapLegType)
+  {
+  case OUTRIGHT:
+    return "Outright";
+  case CURVE:
+    return "Curve";
+  case FLY:
+    return "Fly";
+  default:
+    return "";
   }
 }
 
 // future type
-enum FutureType {EQUITY_INDEX, CURRENCY, INTEREST_RATE, COMMODITY, METAL, FX};
+enum FutureType
+{
+  EQUITY_INDEX,
+  CURRENCY,
+  INTEREST_RATE,
+  COMMODITY,
+  METAL,
+  FX
+};
 // interest rate future type
-enum InterestRateFutureType {EURODOLLAR, FED_FUNDS, SWAP, BOND_FUTURE, SWAP_RATE, NONE_TYPE};
+enum InterestRateFutureType
+{
+  EURODOLLAR,
+  FED_FUNDS,
+  SWAP,
+  BOND_FUTURE,
+  SWAP_RATE,
+  NONE_TYPE
+};
 // exchange type
-enum ExchangeType {CBOT, CMX, NYBOT, KCBT, MGE, MATIE, SFE, NYM, LIFFE, EUREX, ICE};
+enum ExchangeType
+{
+  CBOT,
+  CMX,
+  NYBOT,
+  KCBT,
+  MGE,
+  MATIE,
+  SFE,
+  NYM,
+  LIFFE,
+  EUREX,
+  ICE
+};
 // delivery month
-enum DeliveryMonth {JAN, FEB, MAR, APR, MAY, JUN, JUL, AUG, SEP, OCT, NOV, DEC};
+enum DeliveryMonth
+{
+  JAN,
+  FEB,
+  MAR,
+  APR,
+  MAY,
+  JUN,
+  JUL,
+  AUG,
+  SEP,
+  OCT,
+  NOV,
+  DEC
+};
 
 /**
  * Modeling of a Future Product
  */
-class Future: public Product
+class Future : public Product
 {
 public:
   // future ctor
@@ -426,17 +550,17 @@ public:
   date GetFuturesContractDate() const;
 
   // overload the << operator to print the future
-  friend ostream& operator<<(ostream &output, const Future &future);
+  friend ostream &operator<<(ostream &output, const Future &future);
 
 private:
-  FutureType futureType; // future type variable
+  FutureType futureType;                         // future type variable
   InterestRateFutureType interestRateFutureType; // interest rate future type variable
-  ExchangeType exchange; // exchange type variable
-  DeliveryMonth deliveryMonth; // delivery month variable
-  float tickSize; // tick size variable
-  string underlyingProductId; // underlying product id variable
-  int contractSize; // contract size variable
-  date futuresContractDate; // futures contract date variable
+  ExchangeType exchange;                         // exchange type variable
+  DeliveryMonth deliveryMonth;                   // delivery month variable
+  float tickSize;                                // tick size variable
+  string underlyingProductId;                    // underlying product id variable
+  int contractSize;                              // contract size variable
+  date futuresContractDate;                      // futures contract date variable
 
   // return a string representation of the future type
   string ToString(FutureType futureType) const;
@@ -451,7 +575,7 @@ private:
   string ToString(DeliveryMonth deliveryMonth) const;
 };
 
-Future::Future(string _productId, FutureType _futuretype, InterestRateFutureType _interestRateFutureType, ExchangeType _exchange, DeliveryMonth _deliveryMonth, float _tickSize, string _underlyingProductId, int _contractSize, date _futuresContractDate): Product(_productId, FUTURE)
+Future::Future(string _productId, FutureType _futuretype, InterestRateFutureType _interestRateFutureType, ExchangeType _exchange, DeliveryMonth _deliveryMonth, float _tickSize, string _underlyingProductId, int _contractSize, date _futuresContractDate) : Product(_productId, FUTURE)
 {
   futureType = _futuretype;
   interestRateFutureType = _interestRateFutureType;
@@ -461,7 +585,7 @@ Future::Future(string _productId, FutureType _futuretype, InterestRateFutureType
   underlyingProductId = _underlyingProductId;
   contractSize = _contractSize;
   futuresContractDate = _futuresContractDate;
-} 
+}
 
 Future::Future() : Product(0, FUTURE)
 {
@@ -497,7 +621,6 @@ string Future::GetUnderlyingProductId() const
   return underlyingProductId;
 }
 
-
 int Future::GetContractSize() const
 {
   return contractSize;
@@ -508,7 +631,7 @@ date Future::GetFuturesContractDate() const
   return futuresContractDate;
 }
 
-ostream& operator<<(ostream &output, const Future &future)
+ostream &operator<<(ostream &output, const Future &future)
 {
   output << "FutureType:" << future.ToString(future.GetFutureType()) << " InterestRateFutureType:" << future.ToString(future.GetInterestRateFutureType()) << " Exchange:" << future.ToString(future.GetExchangeType()) << " DeliveryMonth:" << future.ToString(future.GetDeliveryMonth()) << " TickSize:" << future.GetTickSize() << " UnderlyingProductId:" << future.GetUnderlyingProductId() << " ContractSize:" << future.GetContractSize() << " FuturesContractDate:" << future.GetFuturesContractDate();
   return output;
@@ -516,74 +639,125 @@ ostream& operator<<(ostream &output, const Future &future)
 
 string Future::ToString(FutureType futureType) const
 {
-  switch(futureType) {
-  case EQUITY_INDEX: return "Equity Index";
-  case CURRENCY: return "Currency";
-  case INTEREST_RATE: return "Interest Rate";
-  case COMMODITY: return "Commodity";
-  case METAL: return "Metal";
-  case FX: return "FX";
-  default: return "";
+  switch (futureType)
+  {
+  case EQUITY_INDEX:
+    return "Equity Index";
+  case CURRENCY:
+    return "Currency";
+  case INTEREST_RATE:
+    return "Interest Rate";
+  case COMMODITY:
+    return "Commodity";
+  case METAL:
+    return "Metal";
+  case FX:
+    return "FX";
+  default:
+    return "";
   }
 }
 
 string Future::ToString(InterestRateFutureType interestRateFutureType) const
 {
-  switch(interestRateFutureType) {
-  case EURODOLLAR: return "Eurodollar";
-  case FED_FUNDS: return "Fed Funds";
-  case SWAP: return "Swap";
-  case BOND_FUTURE: return "Bond Future";
-  case SWAP_RATE: return "Swap Rate";
-  case NONE_TYPE: return "None";
-  default: return "";
+  switch (interestRateFutureType)
+  {
+  case EURODOLLAR:
+    return "Eurodollar";
+  case FED_FUNDS:
+    return "Fed Funds";
+  case SWAP:
+    return "Swap";
+  case BOND_FUTURE:
+    return "Bond Future";
+  case SWAP_RATE:
+    return "Swap Rate";
+  case NONE_TYPE:
+    return "None";
+  default:
+    return "";
   }
 }
 
 string Future::ToString(ExchangeType exchange) const
 {
-  switch(exchange) {
-  case CBOT: return "CBOT";
-  case CMX: return "CMX";
-  case NYBOT: return "NYBOT";
-  case KCBT: return "KCBT";
-  case MGE: return "MGE";
-  case MATIE: return "MATIE";
-  case SFE: return "SFE";
-  case NYM: return "NYM";
-  case LIFFE: return "LIFFE";
-  case EUREX: return "EUREX";
-  case ICE: return "ICE";
-  default: return "";
+  switch (exchange)
+  {
+  case CBOT:
+    return "CBOT";
+  case CMX:
+    return "CMX";
+  case NYBOT:
+    return "NYBOT";
+  case KCBT:
+    return "KCBT";
+  case MGE:
+    return "MGE";
+  case MATIE:
+    return "MATIE";
+  case SFE:
+    return "SFE";
+  case NYM:
+    return "NYM";
+  case LIFFE:
+    return "LIFFE";
+  case EUREX:
+    return "EUREX";
+  case ICE:
+    return "ICE";
+  default:
+    return "";
   }
 }
 
 string Future::ToString(DeliveryMonth deliveryMonth) const
 {
-  switch(deliveryMonth) {
-  case JAN: return "Jan";
-  case FEB: return "Feb";
-  case MAR: return "Mar";
-  case APR: return "Apr";
-  case MAY: return "May";
-  case JUN: return "Jun";
-  case JUL: return "Jul";
-  case AUG: return "Aug";
-  case SEP: return "Sep";
-  case OCT: return "Oct";
-  case NOV: return "Nov";
-  case DEC: return "Dec";
-  default: return "";
+  switch (deliveryMonth)
+  {
+  case JAN:
+    return "Jan";
+  case FEB:
+    return "Feb";
+  case MAR:
+    return "Mar";
+  case APR:
+    return "Apr";
+  case MAY:
+    return "May";
+  case JUN:
+    return "Jun";
+  case JUL:
+    return "Jul";
+  case AUG:
+    return "Aug";
+  case SEP:
+    return "Sep";
+  case OCT:
+    return "Oct";
+  case NOV:
+    return "Nov";
+  case DEC:
+    return "Dec";
+  default:
+    return "";
   }
 }
 
 // bond future type
-enum BondFutureType {TWO_YR, THREE_YR, FIVE_YR, SEVEN_YR, TEN_YR, TWENTY_YR};
+enum BondFutureType
+{
+  TWO_YR,
+  THREE_YR,
+  FIVE_YR,
+  SEVEN_YR,
+  TEN_YR,
+  TWENTY_YR
+};
 
 /**
  * Modeling of a Bond Future Product
  */
-class BondFuture: public Future
+class BondFuture : public Future
 {
 public:
   // bond future ctor
@@ -594,7 +768,7 @@ public:
   BondFutureType GetBondFutureType() const;
 
   // overload the << operator to print the bond future
-  friend ostream& operator<<(ostream &output, const BondFuture &bondFuture);
+  friend ostream &operator<<(ostream &output, const BondFuture &bondFuture);
 
 private:
   BondFutureType bondFutureType; // bond future type variable
@@ -603,7 +777,7 @@ private:
   string ToString(BondFutureType bondFutureType) const;
 };
 
-BondFuture::BondFuture(string _productId, FutureType _futuretype, InterestRateFutureType _interestRateFutureType, ExchangeType _exchange, DeliveryMonth _deliveryMonth, float _tickSize, string _underlyingProductId, int _contractSize, date _futuresContractDate, BondFutureType _bondFutureType) 
+BondFuture::BondFuture(string _productId, FutureType _futuretype, InterestRateFutureType _interestRateFutureType, ExchangeType _exchange, DeliveryMonth _deliveryMonth, float _tickSize, string _underlyingProductId, int _contractSize, date _futuresContractDate, BondFutureType _bondFutureType)
     : Future(_productId, _futuretype, _interestRateFutureType, _exchange, _deliveryMonth, _tickSize, _underlyingProductId, _contractSize, _futuresContractDate)
 {
   bondFutureType = _bondFutureType;
@@ -614,33 +788,40 @@ BondFutureType BondFuture::GetBondFutureType() const
   return bondFutureType;
 }
 
-ostream& operator<<(ostream &output, const BondFuture &bondFuture)
+ostream &operator<<(ostream &output, const BondFuture &bondFuture)
 {
-  output << static_cast<const Future&>(bondFuture); // Inherit the Future class operator
+  output << static_cast<const Future &>(bondFuture); // Inherit the Future class operator
 
   output << " BondFutureType: " << bondFuture.ToString(bondFuture.GetBondFutureType()); // Print additional information (bond type)
 
   return output;
 }
 
-
 string BondFuture::ToString(BondFutureType bondFutureType) const
 {
-  switch(bondFutureType) {
-  case TWO_YR: return "2Yr";
-  case THREE_YR: return "3Yr";
-  case FIVE_YR: return "5Yr";
-  case SEVEN_YR: return "7Yr";
-  case TEN_YR: return "10Yr";
-  case TWENTY_YR: return "20Yr";
-  default: return "";
+  switch (bondFutureType)
+  {
+  case TWO_YR:
+    return "2Yr";
+  case THREE_YR:
+    return "3Yr";
+  case FIVE_YR:
+    return "5Yr";
+  case SEVEN_YR:
+    return "7Yr";
+  case TEN_YR:
+    return "10Yr";
+  case TWENTY_YR:
+    return "20Yr";
+  default:
+    return "";
   }
 }
 
 /**
-*Modeling a Eurodollar Future Product
-*/
-class EurodollarFuture: public Future
+ *Modeling a Eurodollar Future Product
+ */
+class EurodollarFuture : public Future
 {
 public:
   // eurodollar future ctor
@@ -651,13 +832,13 @@ public:
   float GetLiborRate() const;
 
   // overload the << operator to print the eurodollar future
-  friend ostream& operator<<(ostream &output, const EurodollarFuture &eurodollarFuture);
+  friend ostream &operator<<(ostream &output, const EurodollarFuture &eurodollarFuture);
 
 private:
   float liborRate; // libor rate variable
 };
 
-EurodollarFuture::EurodollarFuture(string _productId, FutureType _futuretype, InterestRateFutureType _interestRateFutureType, ExchangeType _exchange, DeliveryMonth _deliveryMonth, float _tickSize, string _underlyingProductId, int _contractSize, date _futuresContractDate, float _liborRate) 
+EurodollarFuture::EurodollarFuture(string _productId, FutureType _futuretype, InterestRateFutureType _interestRateFutureType, ExchangeType _exchange, DeliveryMonth _deliveryMonth, float _tickSize, string _underlyingProductId, int _contractSize, date _futuresContractDate, float _liborRate)
     : Future(_productId, _futuretype, _interestRateFutureType, _exchange, _deliveryMonth, _tickSize, _underlyingProductId, _contractSize, _futuresContractDate)
 {
   liborRate = _liborRate;
@@ -668,13 +849,12 @@ float EurodollarFuture::GetLiborRate() const
   return liborRate;
 }
 
-ostream& operator<<(ostream &output, const EurodollarFuture &eurodollarFuture)
+ostream &operator<<(ostream &output, const EurodollarFuture &eurodollarFuture)
 {
-  output << static_cast<const Future&>(eurodollarFuture); // Inherit the Future class operator
+  output << static_cast<const Future &>(eurodollarFuture); // Inherit the Future class operator
   // Print additional information (libor rate)
   output << " LiborRate:" << eurodollarFuture.GetLiborRate();
   return output;
 }
-
 
 #endif
