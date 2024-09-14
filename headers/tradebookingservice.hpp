@@ -18,33 +18,36 @@
 #include "executionservice.hpp"
 
 // Trade sides
-enum Side { BUY, SELL };
+enum Side
+{
+  BUY,
+  SELL
+};
 
 /**
  * Trade object with a price, side, and quantity on a particular book.
  * Type T is the product type.
  */
-template<typename T>
+template <typename T>
 class Trade
 {
 
 public:
-
   // ctor for a trade
   Trade() = default;
   Trade(const T &_product, string _tradeId, double _price, string _book, long _quantity, Side _side);
 
   // Get the product
-  const T& GetProduct() const;
+  const T &GetProduct() const;
 
   // Get the trade ID
-  const string& GetTradeId() const;
+  const string &GetTradeId() const;
 
   // Get the mid price
   double GetPrice() const;
 
   // Get the book
-  const string& GetBook() const;
+  const string &GetBook() const;
 
   // Get the quantity
   long GetQuantity() const;
@@ -59,13 +62,10 @@ private:
   string book;
   long quantity;
   Side side;
-
 };
 
-
-template<typename T>
-Trade<T>::Trade(const T &_product, string _tradeId, double _price, string _book, long _quantity, Side _side) :
-  product(_product)
+template <typename T>
+Trade<T>::Trade(const T &_product, string _tradeId, double _price, string _book, long _quantity, Side _side) : product(_product)
 {
   tradeId = _tradeId;
   price = _price;
@@ -74,46 +74,46 @@ Trade<T>::Trade(const T &_product, string _tradeId, double _price, string _book,
   side = _side;
 }
 
-template<typename T>
-const T& Trade<T>::GetProduct() const
+template <typename T>
+const T &Trade<T>::GetProduct() const
 {
   return product;
 }
 
-template<typename T>
-const string& Trade<T>::GetTradeId() const
+template <typename T>
+const string &Trade<T>::GetTradeId() const
 {
   return tradeId;
 }
 
-template<typename T>
+template <typename T>
 double Trade<T>::GetPrice() const
 {
   return price;
 }
 
-template<typename T>
-const string& Trade<T>::GetBook() const
+template <typename T>
+const string &Trade<T>::GetBook() const
 {
   return book;
 }
 
-template<typename T>
+template <typename T>
 long Trade<T>::GetQuantity() const
 {
   return quantity;
 }
 
-template<typename T>
+template <typename T>
 Side Trade<T>::GetSide() const
 {
   return side;
 }
 
 // forward declaration of an inbound connector and a trade booking listener that subscribes data from execution service
-template<typename T>
+template <typename T>
 class TradeBookingServiceListener;
-template<typename T>
+template <typename T>
 class TradeDataConnector;
 
 /**
@@ -121,24 +121,24 @@ class TradeDataConnector;
  * Keyed on trade id.
  * Type T is the product type.
  */
-template<typename T>
-class TradeBookingService : public Service<string,Trade <T> >
+template <typename T>
+class TradeBookingService : public Service<string, Trade<T>>
 {
 private:
-  map<string, Trade<T>> tradeMap; // store trade data keyed by trade id
-  vector<ServiceListener<Trade<T>>*> listeners; // list of listeners to this service
-  TradeBookingServiceListener<T>* tradebookinglistener;
-  string host; // host name for inbound connector
-  string port; // port number for inbound connector
-  TradeDataConnector<T>* connector; // connector related to this server
+  map<string, Trade<T>> tradeMap;                // store trade data keyed by trade id
+  vector<ServiceListener<Trade<T>> *> listeners; // list of listeners to this service
+  TradeBookingServiceListener<T> *tradebookinglistener;
+  string host;                      // host name for inbound connector
+  string port;                      // port number for inbound connector
+  TradeDataConnector<T> *connector; // connector related to this server
 
 public:
   // ctor and dtor
-  TradeBookingService(const string& _host, const string& _port);
-  ~TradeBookingService()=default;
+  TradeBookingService(const string &_host, const string &_port);
+  ~TradeBookingService() = default;
 
   // Get data
-  Trade<T>& GetData(string key);
+  Trade<T> &GetData(string key);
 
   // The callback that a Connector should invoke for any new or updated data
   void OnMessage(Trade<T> &data);
@@ -148,34 +148,32 @@ public:
   void AddListener(ServiceListener<Trade<T>> *listener);
 
   // Get all listeners on the Service.
-  const vector< ServiceListener<Trade<T>>* >& GetListeners() const;
+  const vector<ServiceListener<Trade<T>> *> &GetListeners() const;
 
   // get the connector
-  TradeDataConnector<T>* GetConnector();
+  TradeDataConnector<T> *GetConnector();
 
   // Get associated trade book listener
-  TradeBookingServiceListener<T>* GetTradeBookingServiceListener();
+  TradeBookingServiceListener<T> *GetTradeBookingServiceListener();
 
   void BookTrade(Trade<T> &trade);
-
 };
 
-template<typename T>
-TradeBookingService<T>::TradeBookingService(const string& _host, const string& _port)
-: host(_host), port(_port)
+template <typename T>
+TradeBookingService<T>::TradeBookingService(const string &_host, const string &_port)
+    : host(_host), port(_port)
 {
-  connector = new TradeDataConnector<T>(this, host, port); // connector related to this server
+  connector = new TradeDataConnector<T>(this, host, port);         // connector related to this server
   tradebookinglistener = new TradeBookingServiceListener<T>(this); // listener related to this server
 }
 
-
-template<typename T>
-Trade<T>& TradeBookingService<T>::GetData(string key)
+template <typename T>
+Trade<T> &TradeBookingService<T>::GetData(string key)
 {
   return tradeMap[key];
 }
 
-template<typename T>
+template <typename T>
 void TradeBookingService<T>::OnMessage(Trade<T> &data)
 {
   string key = data.GetTradeId();
@@ -184,69 +182,67 @@ void TradeBookingService<T>::OnMessage(Trade<T> &data)
   else
     tradeMap.insert(pair<string, Trade<T>>(key, data));
 
-  for(auto& listener : listeners)
+  for (auto &listener : listeners)
     listener->ProcessAdd(data);
 }
 
-template<typename T>
+template <typename T>
 void TradeBookingService<T>::AddListener(ServiceListener<Trade<T>> *listener)
 {
   listeners.push_back(listener);
 }
 
-template<typename T>
-const vector< ServiceListener<Trade<T>>* >& TradeBookingService<T>::GetListeners() const
+template <typename T>
+const vector<ServiceListener<Trade<T>> *> &TradeBookingService<T>::GetListeners() const
 {
   return listeners;
 }
 
-template<typename T>
-TradeDataConnector<T>* TradeBookingService<T>::GetConnector()
+template <typename T>
+TradeDataConnector<T> *TradeBookingService<T>::GetConnector()
 {
   return connector;
 }
 
-template<typename T>
-TradeBookingServiceListener<T>* TradeBookingService<T>::GetTradeBookingServiceListener()
+template <typename T>
+TradeBookingServiceListener<T> *TradeBookingService<T>::GetTradeBookingServiceListener()
 {
   return tradebookinglistener;
 }
 
-
 /**
  * Book a trade and send the information to the listener
  */
-template<typename T>
+template <typename T>
 void TradeBookingService<T>::BookTrade(Trade<T> &trade)
 {
   // flow the data to listeners
   // before this, make sure the special listener is added to the service
   // As we notify the special listener, ProcessAdd() will be called to connect data between different services
-  for(auto& l : listeners)
+  for (auto &l : listeners)
     l->ProcessAdd(trade);
-
 }
 
 /**
-* Connector that subscribes data from socket to trade booking service.
-* Type T is the product type.
-*/
-template<typename T>
+ * Connector that subscribes data from socket to trade booking service.
+ * Type T is the product type.
+ */
+template <typename T>
 class TradeDataConnector : public Connector<Trade<T>>
 {
 private:
-  TradeBookingService<T>* service;
-  string host; // host name
-  string port; // port number
-  boost::asio::io_service io_service; // io service
+  TradeBookingService<T> *service;
+  string host;                         // host name
+  string port;                         // port number
+  boost::asio::io_service io_service;  // io service
   boost::asio::ip::tcp::socket socket; // socket
 
-  void handle_read(const boost::system::error_code& ec, std::size_t length, boost::asio::ip::tcp::socket* socket, boost::asio::streambuf* request);
-  void start_accept(boost::asio::ip::tcp::acceptor* acceptor, boost::asio::io_service* io_service);
+  void handle_read(const boost::system::error_code &ec, std::size_t length, boost::asio::ip::tcp::socket *socket, boost::asio::streambuf *request);
+  void start_accept(boost::asio::ip::tcp::acceptor *acceptor, boost::asio::io_service *io_service);
 
 public:
   // ctor
-  TradeDataConnector(TradeBookingService<T>* _service, const string& _host, const string& _port);
+  TradeDataConnector(TradeBookingService<T> *_service, const string &_host, const string &_port);
   // dtor: close the socket
   ~TradeDataConnector();
 
@@ -255,46 +251,52 @@ public:
 
   // Subscribe data from the Connector
   void Subscribe();
-
 };
 
-template<typename T>
-TradeDataConnector<T>::TradeDataConnector(TradeBookingService<T>* _service, const string& _host, const string& _port)
-: service(_service), host(_host), port(_port), socket(io_service)
+template <typename T>
+TradeDataConnector<T>::TradeDataConnector(TradeBookingService<T> *_service, const string &_host, const string &_port)
+    : service(_service), host(_host), port(_port), socket(io_service)
 {
 }
 
-template<typename T>
+template <typename T>
 TradeDataConnector<T>::~TradeDataConnector()
 {
   socket.close();
 }
 
-template<typename T>
-void TradeDataConnector<T>::start_accept(boost::asio::ip::tcp::acceptor* acceptor, boost::asio::io_service* io_service) {
-  boost::asio::ip::tcp::socket* socket = new boost::asio::ip::tcp::socket(*io_service);
-  acceptor->async_accept(*socket, [this, socket, acceptor, io_service](const boost::system::error_code& ec) {
-    if (!ec) {
-      boost::asio::streambuf* request = new boost::asio::streambuf;
-      boost::asio::async_read_until(*socket, *request, "\n", std::bind(&TradeDataConnector<T>::handle_read, this, std::placeholders::_1, std::placeholders::_2, socket, request));
-    }
-    start_accept(acceptor, io_service); // accept the next connection
-  });
+template <typename T>
+void TradeDataConnector<T>::start_accept(boost::asio::ip::tcp::acceptor *acceptor, boost::asio::io_service *io_service)
+{
+  boost::asio::ip::tcp::socket *socket = new boost::asio::ip::tcp::socket(*io_service);
+  acceptor->async_accept(*socket, [this, socket, acceptor, io_service](const boost::system::error_code &ec)
+                         {
+                           if (!ec)
+                           {
+                             boost::asio::streambuf *request = new boost::asio::streambuf;
+                             boost::asio::async_read_until(*socket, *request, "\n", std::bind(&TradeDataConnector<T>::handle_read, this, std::placeholders::_1, std::placeholders::_2, socket, request));
+                           }
+                           start_accept(acceptor, io_service); // accept the next connection
+                         });
 }
 
-
-template<typename T>
-void TradeDataConnector<T>::handle_read(const boost::system::error_code& ec, std::size_t length, boost::asio::ip::tcp::socket* socket, boost::asio::streambuf* request) {
-  if (!ec) {
+template <typename T>
+void TradeDataConnector<T>::handle_read(const boost::system::error_code &ec, std::size_t length, boost::asio::ip::tcp::socket *socket, boost::asio::streambuf *request)
+{
+  if (!ec)
+  {
     std::string data = std::string(boost::asio::buffers_begin(request->data()), boost::asio::buffers_end(request->data()));
     // find the last newline
     std::size_t last_newline = data.rfind('\n');
-    if (last_newline != std::string::npos) {
+    if (last_newline != std::string::npos)
+    {
       // consume only up to the last newline
       request->consume(last_newline + 1);
       // only process the data up to the last newline
       data = data.substr(0, last_newline);
-    } else {
+    }
+    else
+    {
       // if there's no newline, don't process any data
       data.clear();
     }
@@ -302,12 +304,13 @@ void TradeDataConnector<T>::handle_read(const boost::system::error_code& ec, std
     // split the data into lines
     std::stringstream ss(data);
     std::string line;
-    while (std::getline(ss, line)) {
+    while (std::getline(ss, line))
+    {
       // parse the line
       vector<string> tokens;
       stringstream lineStream(line);
       string token;
-      while(getline(lineStream, token, ','))
+      while (getline(lineStream, token, ','))
         tokens.push_back(token);
 
       // create a trade object
@@ -326,31 +329,35 @@ void TradeDataConnector<T>::handle_read(const boost::system::error_code& ec, std
     }
 
     boost::asio::async_read_until(*socket, *request, "\n", std::bind(&TradeDataConnector<T>::handle_read, this, std::placeholders::_1, std::placeholders::_2, socket, request));
-  } else {
+  }
+  else
+  {
     delete request; // delete the streambuf when we're done with it
-    delete socket; // delete the socket when we're done with it
+    delete socket;  // delete the socket when we're done with it
   }
 }
 
-template<typename T>
+template <typename T>
 void TradeDataConnector<T>::Publish(Trade<T> &data)
 {
 }
 
-template<typename T>
+template <typename T>
 void TradeDataConnector<T>::Subscribe()
 {
   log(LogLevel::NOTE, "Trade data server listening on " + host + ":" + port);
-  try {
-  // connect to the socket
-  boost::asio::ip::tcp::resolver resolver(io_service);
-  boost::asio::ip::tcp::resolver::query query(host, port);
-  boost::asio::ip::tcp::endpoint endpoint = *resolver.resolve(query);
-  boost::asio::ip::tcp::acceptor acceptor(io_service, endpoint);
-  start_accept(&acceptor, &io_service);
-  io_service.run();
+  try
+  {
+    // connect to the socket
+    boost::asio::ip::tcp::resolver resolver(io_service);
+    boost::asio::ip::tcp::resolver::query query(host, port);
+    boost::asio::ip::tcp::endpoint endpoint = *resolver.resolve(query);
+    boost::asio::ip::tcp::acceptor acceptor(io_service, endpoint);
+    start_accept(&acceptor, &io_service);
+    io_service.run();
   }
-  catch (std::exception& e){
+  catch (std::exception &e)
+  {
     // throw error log
     log(LogLevel::ERROR, e.what());
     return;
@@ -363,18 +370,18 @@ void TradeDataConnector<T>::Subscribe()
  * transfer the ExecutionOrder<T> data to Trade<T> data, and call BookTrade()
  * method to publish the Trade<T> data to Trade Booking Service.
  */
-template<typename T>
+template <typename T>
 class TradeBookingServiceListener : public ServiceListener<ExecutionOrder<T>>
 {
 private:
-  TradeBookingService<T>* service;
+  TradeBookingService<T> *service;
   long count;
 
 public:
   // ctor
-  TradeBookingServiceListener(TradeBookingService<T>* _service);
+  TradeBookingServiceListener(TradeBookingService<T> *_service);
   // dtor
-  ~TradeBookingServiceListener()=default;
+  ~TradeBookingServiceListener() = default;
 
   // Listener callback to process an add event to the Service
   void ProcessAdd(ExecutionOrder<T> &data) override;
@@ -384,44 +391,43 @@ public:
 
   // Listener callback to process an update event to the Service
   void ProcessUpdate(ExecutionOrder<T> &data) override;
-
 };
 
-template<typename T>
-TradeBookingServiceListener<T>::TradeBookingServiceListener(TradeBookingService<T>* _service)
+template <typename T>
+TradeBookingServiceListener<T>::TradeBookingServiceListener(TradeBookingService<T> *_service)
 {
   service = _service;
   count = 0;
 }
 
-
 /**
  * ProcessAdd() method is used to transfer ExecutionOrder<T> data to Trade<T> data,
  * and then call BookTrade() method to publish the Trade<T> data to Trade Booking Service.
  */
-template<typename T>
+template <typename T>
 void TradeBookingServiceListener<T>::ProcessAdd(ExecutionOrder<T> &data)
 {
   T product = data.GetProduct();
   string orderId = data.GetOrderId();
   double price = data.GetPrice();
-  PricingSide pside = data.GetSide();  
+  PricingSide pside = data.GetSide();
   long vQty = data.GetVisibleQuantity();
   long hQty = data.GetHiddenQuantity();
   long quantity = vQty + hQty;
   Side side;
-  switch (pside){
-    case BID:
-      side = BUY;
-      break;
-    case OFFER:
-      side = SELL;
-      break;
+  switch (pside)
+  {
+  case BID:
+    side = BUY;
+    break;
+  case OFFER:
+    side = SELL;
+    break;
   }
   string book;
   // switch book based on count
   count++;
-  switch (count%3)
+  switch (count % 3)
   {
   case 0:
     book = "TRSY1";
@@ -440,21 +446,14 @@ void TradeBookingServiceListener<T>::ProcessAdd(ExecutionOrder<T> &data)
   service->BookTrade(trade);
 }
 
-template<typename T>
+template <typename T>
 void TradeBookingServiceListener<T>::ProcessRemove(ExecutionOrder<T> &data)
 {
 }
 
-template<typename T>
+template <typename T>
 void TradeBookingServiceListener<T>::ProcessUpdate(ExecutionOrder<T> &data)
 {
 }
 
-
 #endif
-
-
-
-
-
-
